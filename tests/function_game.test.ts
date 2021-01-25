@@ -52,9 +52,9 @@ test('Test addLetter', () => {
     guessed: [],
     uuid: '',
   }
-  expect(addLetter(game, 'a')).toBeTruthy()
+  expect(addLetter(game, 'A')).toBeTruthy()
   expect(game.guessed).toMatchObject(['a'])
-  expect(addLetter(game, 'a')).toBeFalsy()
+  expect(addLetter(game, 'A')).toBeFalsy()
   expect(game.guessed).toMatchObject(['a'])
   expect(addLetter(game, 'b')).toBeTruthy()
   expect(game.guessed).toMatchObject(['a', 'b'])
