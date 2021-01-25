@@ -16,12 +16,12 @@ export default function Main({ children }: { children: ReactChild }) {
 
       <main>{children}</main>
 
-      <footer>
+      {/*<footer>
         Andrius Simanaitis © 2021
         {new Date().getFullYear() !== 2021
           ? ` - ${new Date().getFullYear()}`
           : ''}
-      </footer>
+        </footer>*/}
     </Segment>
   )
 }

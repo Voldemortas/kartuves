@@ -1,8 +1,9 @@
 import Main from '../components/Main'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Button } from 'semantic-ui-react'
+import { Button, Icon } from 'semantic-ui-react'
 import { game } from '../types'
+import NewGameButton from '../components/NewGameButton'
 
 type state = {
   game: game | null
@@ -12,7 +13,21 @@ type state = {
 
 const alphabet = 'aąbcčdeęėfghiįyjklmnoprsštuųūvzž'.split('')
 
-const buttonText = 'Pradėti naują žaidimą'
+const newGame = async () => {
+  try {
+    const response = await axios.post(
+      '/api/game',
+      JSON.stringify({ start: true }),
+      {
+        headers: {
+          'Content-Type': 'text/plain;charset=UTF-8',
+        },
+      }
+    )
+    window.localStorage.setItem('id', response.data.uuid)
+    window.location.href = '/game'
+  } catch {}
+}
 
 export default function Home() {
   const [state, setState] = useState<state>({
@@ -44,6 +59,8 @@ export default function Home() {
                 <>
                   Pergalė <br />
                 </>
+              ) : state.game.over ? (
+                'Pralošėte'
               ) : (
                 ''
               )}
@@ -89,6 +106,16 @@ export default function Home() {
                 </Button>
               ))}
             </div>
+            <Button
+              color="red"
+              className="fullWidth"
+              onClick={() => {
+                location.href = '/'
+              }}
+            >
+              Atgal
+            </Button>
+            <NewGameButton className="fullWidth" inverted={false} />
           </>
         )}
       </>
