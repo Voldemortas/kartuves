@@ -35,8 +35,10 @@ export default function NewGameButton(
           },
         }
       )
-      window.localStorage.setItem('id', response.data.uuid)
-      window.location.href = '/game'
+      setTimeout(() => {
+        window.localStorage.setItem('id', response.data.uuid)
+        window.location.href = '/game'
+      }, 1000)
     } catch {
       setState({ ...state, button: buttonText, open: true, error: true })
     }
