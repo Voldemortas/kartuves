@@ -1,6 +1,6 @@
 # Kartuvės
 
-Live preview: https://kartuvės.andriaus.lt
+Live preview: https://kartuves.andriaus.lt
 
 ## Setup
 
