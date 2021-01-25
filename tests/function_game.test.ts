@@ -53,9 +53,11 @@ test('Test addLetter', () => {
     uuid: '',
   }
   expect(addLetter(game, 'A')).toBeTruthy()
+  expect(game.word).toBe('mama')
   expect(game.guessed).toMatchObject(['a'])
   expect(addLetter(game, 'A')).toBeFalsy()
   expect(game.guessed).toMatchObject(['a'])
   expect(addLetter(game, 'b')).toBeTruthy()
   expect(game.guessed).toMatchObject(['a', 'b'])
+  expect(game.word).toBe('mama')
 })

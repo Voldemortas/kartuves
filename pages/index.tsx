@@ -36,30 +36,28 @@ export default function Home() {
   }
   return (
     <Main>
-      <>
-        <h1>Kartuvės</h1>
-        <div
-          style={{
-            height: 300,
-            width: 300,
-            backgroundColor: 'green',
-            display: 'inline-block',
-            margin: 20,
-          }}
-        >
-          paveikslėlis
-        </div>
-        <br />
-        <Button
-          inverted
-          color="green"
-          onClick={state.open ? handleClick : () => {}}
-          disabled={!state.open}
-        >
-          {state.button}
-        </Button>
-        <span>{state.error ? 'Klaida, bandykite dar kartą' : ''}</span>
-      </>
+      <h1>Kartuvės</h1>
+      <div
+        style={{
+          height: 300,
+          width: 300,
+          backgroundColor: 'green',
+          display: 'inline-block',
+          margin: 20,
+        }}
+      >
+        paveikslėlis
+      </div>
+      <br />
+      <Button
+        inverted
+        color="green"
+        onClick={state.open ? handleClick : () => {}}
+        disabled={!state.open}
+      >
+        {state.button}
+      </Button>
+      <span>{state.error ? 'Klaida, bandykite dar kartą' : ''}</span>
     </Main>
   )
 }

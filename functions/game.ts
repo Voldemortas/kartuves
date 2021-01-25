@@ -1,12 +1,13 @@
 import { game } from '../types/index'
 export function blankName(game: game): game {
-  game.word = game.word.toLocaleLowerCase()
-  let name = game.word
+  const temp = JSON.parse(JSON.stringify(game))
+  temp.word = temp.word.toLocaleLowerCase()
+  let name = temp.word
     .split('')
-    .map((e) => (game.guessed.includes(e) ? e : '_'))
+    .map((e) => (temp.guessed.includes(e) ? e : '_'))
     .join('')
-  game.word = name
-  return game
+  temp.word = name
+  return temp
 }
 export function isOver(game: game): game {
   game.word = game.word.toLocaleLowerCase()
