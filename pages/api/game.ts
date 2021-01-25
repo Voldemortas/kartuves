@@ -40,12 +40,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const query = req.query
   const body = (() => {
     try {
-      return JSON.parse(req.body ?? '{}') ?? {}
+      return JSON.parse(req.body)
     } catch {
       return {}
     }
   })()
-
   if (
     method === 'POST' &&
     (query.id === '' || query.id === undefined) &&
@@ -53,7 +52,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   ) {
     const game = await createGame()
     res.status(202)
-    res.send({ game })
+    res.send(blankName(game))
     return
   }
 
