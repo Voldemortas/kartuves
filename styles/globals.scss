@@ -26,7 +26,9 @@ footer {
   min-height: 100%;
   max-width: 740px;
   position: relative;
-  left: calc(50% - 370px);
+  @media (min-width: 740px) {
+    left: calc(50% - 370px);
+  }
 }
 
 .buttons {
