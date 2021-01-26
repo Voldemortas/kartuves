@@ -24,6 +24,9 @@ footer {
 }
 #__next {
   min-height: 100%;
+  max-width: 740px;
+  position: relative;
+  left: calc(50% - 370px);
 }
 
 .buttons {
