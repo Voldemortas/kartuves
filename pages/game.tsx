@@ -1,5 +1,5 @@
 import Main from '../components/Main'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, Ref } from 'react'
 import axios from 'axios'
 import { Button, Icon } from 'semantic-ui-react'
 import { game } from '../types'
@@ -14,6 +14,9 @@ type state = {
 const alphabet = 'aąbcčdeęėfghiįyjklmnoprsštuųūvzž'.split('')
 
 export default function Home() {
+  const refs: React.RefObject<HTMLButtonElement>[] = alphabet.map((e) =>
+    useRef(null)
+  )
   const [state, setState] = useState<state>({
     game: null,
     id: null,
@@ -26,6 +29,50 @@ export default function Home() {
       const game = await axios.get('/api/game?id=' + id)
       setState({ ...state, game: game.data, id })
     })()
+  }, [])
+  useEffect(() => {
+    const getCircularReplacer = () => {
+      const seen = new WeakSet()
+      return (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+          if (seen.has(value)) {
+            return
+          }
+          seen.add(value)
+        }
+        return value
+      }
+    }
+    function press(event: KeyboardEvent): void {
+      const buttonNames: string[][] = [
+        ['Digit1', 'ą'],
+        ['Digit2', 'č'],
+        ['Digit3', 'ę'],
+        ['Digit4', 'ė'],
+        ['Digit5', 'į'],
+        ['Digit6', 'š'],
+        ['Digit7', 'ų'],
+        ['Digit8', 'ū'],
+        ['Equal', 'ž'],
+      ]
+      const buttons = refs.map((e) => e.current!)
+      //@ts-ignore
+      const filtered = buttons.filter((e) => e.props.children === event.key)
+      if (filtered.length === 1) {
+        //@ts-ignore
+        filtered[0].ref.current.click()
+        return
+      }
+      const filteredButtons = buttonNames.filter((e) => event.code === e[0])
+      if (filteredButtons.length === 1) {
+        buttons
+          //@ts-ignore
+          .filter((e) => e.props.children === event.key)[0]
+          //@ts-ignore
+          .ref.current.click()
+      }
+    }
+    document.addEventListener('keyup', press)
   }, [])
 
   return (
@@ -61,8 +108,10 @@ export default function Home() {
               )}
             </div>
             <div className="buttons">
-              {alphabet.map((e) => (
+              {alphabet.map((e, i) => (
                 <Button
+                  //@ts-ignore
+                  ref={refs[i]}
                   key={e}
                   inverted
                   color={
@@ -101,15 +150,9 @@ export default function Home() {
                 </Button>
               ))}
             </div>
-            <Button
-              color="red"
-              className="fullWidth"
-              onClick={() => {
-                location.href = '/'
-              }}
-            >
+            <a href="/" className="ui red button fullWidth">
               Atgal
-            </Button>
+            </a>
             <NewGameButton className="fullWidth" inverted={false} />
           </>
         )}
