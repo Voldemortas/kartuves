@@ -13,22 +13,6 @@ type state = {
 
 const alphabet = 'aąbcčdeęėfghiįyjklmnoprsštuųūvzž'.split('')
 
-const newGame = async () => {
-  try {
-    const response = await axios.post(
-      '/api/game',
-      JSON.stringify({ start: true }),
-      {
-        headers: {
-          'Content-Type': 'text/plain;charset=UTF-8',
-        },
-      }
-    )
-    window.localStorage.setItem('id', response.data.uuid)
-    window.location.href = '/game'
-  } catch {}
-}
-
 export default function Home() {
   const [state, setState] = useState<state>({
     game: null,
@@ -49,9 +33,20 @@ export default function Home() {
       <>
         <h1>Kartuvės</h1>
         {state.game === null ? (
-          <>KRAUNAMA</>
+          <>
+            KRAUNAMA
+            <br />
+            <img src="0.png" />
+          </>
         ) : (
           <>
+            <img
+              src={
+                state.game.guessed.filter(
+                  (e) => !state.game.word.split('').includes(e)
+                ).length + '.png'
+              }
+            />
             <div className="hangman">{state.game.word}</div>
             <div className="game-failure">{state.error}</div>
             <div className="game-sucess">

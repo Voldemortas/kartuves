@@ -19,17 +19,7 @@ export default function Home() {
     <Main>
       <>
         <h1>Kartuvės</h1>
-        <div
-          style={{
-            height: 300,
-            width: 300,
-            backgroundColor: 'green',
-            display: 'inline-block',
-            margin: 20,
-          }}
-        >
-          paveikslėlis
-        </div>
+        <img src={Math.floor(Math.random() * 11) + '.png'} />
         <br />
         <NewGameButton />
         <span>{state.error ? 'Klaida, bandykite dar kartą' : ''}</span>
