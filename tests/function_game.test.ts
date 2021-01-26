@@ -53,6 +53,10 @@ test('Test addLetter', () => {
     uuid: '',
   }
   expect(addLetter(game, 'A')).toBeTruthy()
+  expect(addLetter(game, 'ab')).toBeFalsy()
+  expect(addLetter(game, 'a0')).toBeFalsy()
+  expect(addLetter(game, '0a')).toBeFalsy()
+  expect(addLetter(game, '1')).toBeFalsy()
   expect(game.word).toBe('mama')
   expect(game.guessed).toMatchObject(['a'])
   expect(addLetter(game, 'A')).toBeFalsy()
@@ -60,4 +64,23 @@ test('Test addLetter', () => {
   expect(addLetter(game, 'b')).toBeTruthy()
   expect(game.guessed).toMatchObject(['a', 'b'])
   expect(game.word).toBe('mama')
+
+  let game2: game = {
+    word: 'xwq',
+    guessed: [],
+    uuid: '',
+  }
+  expect(addLetter(game2, 'A')).toBeTruthy()
+  expect(addLetter(game2, 'B')).toBeTruthy()
+  expect(addLetter(game2, 'C')).toBeTruthy()
+  expect(addLetter(game2, 'D')).toBeTruthy()
+  expect(addLetter(game2, 'E')).toBeTruthy()
+  expect(addLetter(game2, 'F')).toBeTruthy()
+  expect(addLetter(game2, 'G')).toBeTruthy()
+  expect(addLetter(game2, 'H')).toBeTruthy()
+  expect(addLetter(game2, 'I')).toBeTruthy()
+  expect(addLetter(game2, 'J')).toBeTruthy()
+  expect(game2.original).toBe(undefined)
+  expect(addLetter(game2, 'K')).toBeFalsy()
+  expect(game2.original).toBe(game2.word)
 })

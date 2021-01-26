@@ -1,17 +1,16 @@
 import Main from '../components/Main'
-import React, { useState, useEffect, useRef, Ref } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { Button, Icon } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 import { game } from '../types'
 import NewGameButton from '../components/NewGameButton'
+import { alphabet } from '../functions/game'
 
 type state = {
   game: game | null
   id: string | null
   error: string | null
 }
-
-const alphabet = 'aąbcčdeęėfghiįyjklmnoprsštuųūvzž'.split('')
 
 export default function Home() {
   const refs: React.RefObject<HTMLButtonElement>[] = alphabet.map((e) =>
@@ -31,18 +30,6 @@ export default function Home() {
     })()
   }, [])
   useEffect(() => {
-    const getCircularReplacer = () => {
-      const seen = new WeakSet()
-      return (key, value) => {
-        if (typeof value === 'object' && value !== null) {
-          if (seen.has(value)) {
-            return
-          }
-          seen.add(value)
-        }
-        return value
-      }
-    }
     function press(event: KeyboardEvent): void {
       const buttonNames: string[][] = [
         ['Digit1', 'ą'],
@@ -102,7 +89,7 @@ export default function Home() {
                   Pergalė <br />
                 </>
               ) : state.game.over ? (
-                'Pralošėte'
+                'Pralošėte, žodis buvo ' + state.game.original
               ) : (
                 ''
               )}

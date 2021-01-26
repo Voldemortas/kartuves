@@ -1,4 +1,7 @@
 import { game } from '../types/index'
+
+export const alphabet = 'aąbcčdeęėfghiįyjklmnoprsštuųūvzž'.split('')
+
 export function blankName(game: game): game {
   const temp = JSON.parse(JSON.stringify(game))
   temp.word = temp.word.toLocaleLowerCase()
@@ -10,19 +13,20 @@ export function blankName(game: game): game {
   return temp
 }
 export function isOver(game: game): game {
-  game.word = game.word.toLocaleLowerCase()
-  const word = game.word.split('')
+  let temp = game
+  temp.word = temp.word.toLocaleLowerCase()
+  const word = temp.word.split('')
   if (
-    game.guessed.reduce((acc: number, cur) => {
+    temp.guessed.reduce((acc: number, cur) => {
       return acc + (word.includes(cur) ? 0 : 1)
     }, 0) >= 10
   ) {
-    return { ...game, over: true }
+    return { ...temp, over: true, original: game.word }
   }
-  if (Array.from(blankName(game).word.matchAll(/_/g)).length === 0) {
-    return { ...blankName(game), over: true }
+  if (Array.from(blankName(temp).word.matchAll(/_/g)).length === 0) {
+    return { ...blankName(temp), over: true }
   }
-  return { ...game, over: false }
+  return { ...temp, over: false }
 }
 export function addLetter(game: game, letter: string): boolean {
   letter = letter.toLocaleLowerCase()
@@ -31,8 +35,13 @@ export function addLetter(game: game, letter: string): boolean {
     game.guessed.includes(letter) ||
     letter === undefined ||
     letter === null ||
-    typeof letter !== 'string'
+    typeof letter !== 'string' ||
+    !alphabet.includes(letter)
   ) {
+    return false
+  }
+  if (isOver(game).over) {
+    game.original = game.word
     return false
   }
   game.guessed.push(letter)
