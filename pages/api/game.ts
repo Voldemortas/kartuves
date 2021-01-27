@@ -1,39 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { readFileSync, existsSync, writeFileSync } from 'fs'
-import { v4 as uuidv4 } from 'uuid'
-import { game } from '../../types'
-import { blankName, isOver, addLetter } from '../../functions/game'
-
-const database = process.cwd() + '/database'
-
-async function createGame(): Promise<game> {
-  return new Promise<game>((resolve) => {
-    const words = JSON.parse(readFileSync(`${database}/words.json`, 'utf8'))
-      .words as string[]
-    const uuid = uuidv4()
-
-    const game: game = {
-      word: words[Math.floor(Math.random() * words.length)],
-      guessed: [],
-      uuid,
-    }
-    writeFileSync(`${database}/game-${uuid}.json`, JSON.stringify(game))
-    resolve(game)
-  })
-}
-
-async function getGame(uuid: string): Promise<game | null> {
-  return new Promise<game | null>((resolve) => {
-    if (existsSync(`${database}/game-${uuid}.json`)) {
-      const game = JSON.parse(
-        readFileSync(`${database}/game-${uuid}.json`, 'utf8')
-      ) as game
-      resolve(game)
-    } else {
-      resolve(null)
-    }
-  })
-}
+import Game from '../../classes/Game'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method
@@ -50,43 +16,39 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     (query.id === '' || query.id === undefined) &&
     body.start
   ) {
-    const game = await createGame()
-    res.status(202)
-    res.send(blankName(game))
+    const game = new Game()
+    await Game.Save(game)
+    res.send(game.toString())
     return
   }
 
   if (method === 'GET' && query.id !== undefined && query.id !== '') {
-    const game = await getGame(query.id as string)
+    const game = await Game.Load(query.id as string)
     if (game === null) {
       res.status(403)
       res.send('No Such game')
     } else {
       res.status(202)
-      res.send(blankName(isOver(game)))
+      res.send(game.toString())
     }
     return
   }
 
   if (method === 'PUT' && query.id !== undefined && query.id !== '') {
-    const game = await getGame(query.id as string)
-    const over = isOver(game).over
+    const game = await Game.Load(query.id as string)
     if (game === null) {
       res.status(403)
       res.send('No Such game')
-    } else if (over) {
+    } else if (game.status !== 'ongoing') {
       res.status(403)
       res.send('Game is finished')
-    } else if (!addLetter(game, body.letter)) {
+    } else if (!game.addLetter(body.letter)) {
       res.status(403)
       res.send('Such letter exists')
     } else {
-      await writeFileSync(
-        `${database}/game-${query.id}.json`,
-        JSON.stringify(game)
-      )
+      await Game.Save(game)
       res.status(202)
-      res.send(blankName(isOver(game)))
+      res.send(game.toString())
     }
     return
   }

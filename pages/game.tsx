@@ -2,12 +2,11 @@ import Main from '../components/Main'
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { Button } from 'semantic-ui-react'
-import { game } from '../types'
 import NewGameButton from '../components/NewGameButton'
-import { alphabet } from '../functions/game'
+import Game, { alphabet } from '../classes/Game'
 
 type state = {
-  game: game | null
+  game: Game | null
   id: string | null
   error: string | null
 }
@@ -84,11 +83,11 @@ export default function Home() {
             <div className="hangman">{state.game.word}</div>
             <div className="game-failure">{state.error}</div>
             <div className="game-sucess">
-              {state.game.over && !state.game.word.split('').includes('_') ? (
+              {state.game.status === 'victory' ? (
                 <>
                   Pergalė <br />
                 </>
-              ) : state.game.over ? (
+              ) : state.game.status === 'loss' ? (
                 'Pralošėte, žodis buvo ' + state.game.original
               ) : (
                 ''
@@ -105,11 +104,15 @@ export default function Home() {
                     state.game.guessed.includes(e) &&
                     !state.game.word.includes(e)
                       ? 'red'
-                      : state.game.over && !state.game.word.includes(e)
+                      : state.game.status !== 'ongoing' &&
+                        !state.game.word.includes(e)
                       ? 'yellow'
                       : 'green'
                   }
-                  disabled={state.game.guessed.includes(e) || state.game.over}
+                  disabled={
+                    state.game.guessed.includes(e) ||
+                    state.game.status !== 'ongoing'
+                  }
                   onClick={
                     !state.game.guessed.includes(e)
                       ? async () => {
