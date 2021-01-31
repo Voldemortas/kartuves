@@ -128,7 +128,7 @@ export default function Home() {
                                 }
                               )
                             ).data
-                            setState({ ...state, game })
+                            setState({ ...state, error: null, game })
                           } catch (error) {
                             setState({ ...state, error: error.response.data })
                           }
