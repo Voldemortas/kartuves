@@ -1,5 +1,6 @@
 import { readFileSync, existsSync, writeFileSync } from 'fs'
 import { v4 as uuidv4 } from 'uuid'
+import Word from './Word'
 const database = process.cwd() + '/database'
 
 const maxWordSize = 10
@@ -12,8 +13,8 @@ export default class Game {
   constructor(word = '', uuid = '', guessed = []) {
     if (word === '') {
       const words = JSON.parse(readFileSync(`${database}/words.json`, 'utf8'))
-        .words as string[]
-      word = words[Math.floor(Math.random() * words.length)]
+        .words as Word[]
+      word = words[Math.floor(Math.random() * words.length)].word
     }
     if (uuid === '') {
       uuid = uuidv4()
